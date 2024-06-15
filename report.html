@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crime Reporting System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Report a Crime</h1>
+        <form action="submit_report.php" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="crime_type">Type of Crime:</label>
+            <input type="text" id="crime_type" name="crime_type" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+
+            <button type="submit">Submit Report</button>
+        </form>
+    </div>
+    <script>
+        // Script to show a success message after form submission
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "submit_report.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = xhr.responseText;
+                    if (response.includes("success")) {
+                        document.getElementById('message-text').innerText = "Thank you for your report. Please stay calm, and know that help is on the way. The authorities have been notified and will arrive shortly.";
+                        document.getElementById('message').classList.remove('hidden');
+                        document.getElementById('reportForm').reset();
+                    } else {
+                        document.getElementById('message-text').innerText = "There was an error submitting your report. Please try again.";
+                        document.getElementById('message').classList.remove('hidden');
+                    }
+                }
+            };
+
+            var formData = new FormData(document.getElementById('reportForm'));
+            var params = new URLSearchParams(formData).toString();
+            xhr.send(params);
+        });
+    </script>
+</body>
+</html>
